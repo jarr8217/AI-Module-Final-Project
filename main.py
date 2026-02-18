@@ -34,6 +34,16 @@ def discover_doc_files(data_dir):
 
 
 def load_documents(file_paths):
+    """
+    Load documents from a list of file paths.
+
+    Args:
+        file_paths: A list of file paths to load.
+
+    Returns:
+        A list of dictionaries, where each dictionary contains the source
+        path and text of a document.
+    """
     documents = []
 
     for path in file_paths:
@@ -53,6 +63,18 @@ def load_documents(file_paths):
 
 
 def chunk_text(text, chunk_size=1000, overlap=200):
+    """
+    Splits a string of text into overlapping chunks of a specified size.
+
+    Args:
+        text (str): The text to be split into chunks.
+        chunk_size (int, optional): The size of each chunk. Defaults to 1000.
+        overlap (int, optional): The amount of overlap between chunks. Defaults to 200.
+
+    Returns:
+        list: A list of overlapping chunks of text. Each chunk is a string.
+
+    """
     chunks = []
 
     if len(text) <= chunk_size:
@@ -74,6 +96,19 @@ def chunk_text(text, chunk_size=1000, overlap=200):
 
 
 def chunk_docs(documents, chunk_size=1000, overlap=200):
+    """
+    Splits a list of documents into overlapping chunks of text.
+
+    Args:
+        documents (list): A list of documents. Each document is a dict with
+            'source' and 'text' keys.
+        chunk_size (int, optional): The size of each chunk. Defaults to 1000.
+        overlap (int, optional): The amount of overlap between chunks. Defaults to 200.
+
+    Returns:
+        list: A list of overlapping chunks of text. Each chunk is a dict with
+            'source', 'chunk_id', and 'text' keys.
+    """
     all_chunks = []
 
     for doc in documents:
@@ -92,7 +127,17 @@ def chunk_docs(documents, chunk_size=1000, overlap=200):
 
 
 def main():
+    """
+    Loads documents from data directory, chunks them into overlapping pieces of text, and prints a preview of the results.
 
+    Prints the project root, data directory, storage directory, number of documents found, number of documents loaded, and a preview of the first document and its first chunk.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     project_root = Path('.').resolve()  # absolute path to current folder
     data_dir, storage_dir = ensure_project_dirs(project_root)
 
