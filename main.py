@@ -73,6 +73,24 @@ def chunk_text(text, chunk_size=1000, overlap=200):
     return chunks
 
 
+def chunk_docs(documents, chunk_size=1000, overlap=200):
+    all_chunks = []
+
+    for doc in documents:
+        pieces = chunk_text(doc['text'], chunk_size, overlap=overlap)
+
+        for i, piece in enumerate(pieces):
+            all_chunks.append(
+                {
+                    'source': doc['source'],
+                    'chunk_id': i,
+                    'text': piece,
+                }
+            )
+
+    return all_chunks
+
+
 def main():
 
     project_root = Path('.').resolve()  # absolute path to current folder
@@ -81,16 +99,22 @@ def main():
     files = discover_doc_files(data_dir)
     documents = load_documents(files)
 
+    chunks = chunk_docs(documents, chunk_size=1000, overlap=200)
+
     print('Project root:', project_root)
     print('Data directory:', data_dir)
     print('Storage directory:', storage_dir)
     print('Docs found:', len(files))
     print('Docs loaded:', len(documents))
 
-    if documents:
+    '''if documents:
         print('\nPreview of first doc source:', documents[0]['source'])
         print('Preview of first doc text (first 500 chars):')
-        print(documents[0]['text'][:500])
+        print(documents[0]['text'][:500])'''
+    if chunks:
+        print('\nPreview of first chunk source:', chunks[0]['source'])
+        print('Preview of first chunk text (first 500 chars):')
+        print(chunks[0]['text'][:500])
 
 
 if __name__ == '__main__':
