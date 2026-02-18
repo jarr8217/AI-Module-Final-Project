@@ -33,24 +33,43 @@ def discover_doc_files(data_dir):
     return sorted(files)
 
 
+def load_documents(file_paths):
+    documents = []
+
+    for path in file_paths:
+        try:
+            text = path.read_text(encoding='utf-8', errors='ignore').strip()
+        except Exception as e:
+            print('Skipping unreadable file:', path, '| Error:', e)
+            continue
+        documents.append(
+            {
+                'source': str(path),
+                'text': text,
+            }
+        )
+
+    return documents
+
+
 def main():
-    """
-    Prints the project root, data directory and storage directory to the console.
 
-    After resolving the absolute path to the current folder, it ensures that
-    the project's data and storage directories exist, and then prints the
-    absolute paths to the project root, data directory and storage directory.
-
-    Prints "Done" when it has finished.
-    """
     project_root = Path('.').resolve()  # absolute path to current folder
     data_dir, storage_dir = ensure_project_dirs(project_root)
 
-    print(f"Project root: {project_root}")
-    print(f"Data directory: {data_dir}")
-    print(f"Storage directory: {storage_dir}")
+    files = discover_doc_files(data_dir)
+    documents = load_documents(files)
 
-    print("Done")
+    print('Project root:', project_root)
+    print('Data directory:', data_dir)
+    print('Storage directory:', storage_dir)
+    print('Docs found:', len(files))
+    print('Docs loaded:', len(documents))
+
+    if documents:
+        print('\nPreview of first doc source:', documents[0]['source'])
+        print('Preview of first doc text (first 500 chars):')
+        print(documents[0]['text'][:500])
 
 
 if __name__ == '__main__':
