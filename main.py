@@ -52,6 +52,27 @@ def load_documents(file_paths):
     return documents
 
 
+def chunk_text(text, chunk_size=1000, overlap=200):
+    chunks = []
+
+    if len(text) <= chunk_size:
+        return [text]
+    start = 0
+
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end]
+        chunks.append(chunk)
+
+        # Moves start forwarward, but keeps overlap so we don't lose context between chunks
+        start = end - overlap
+
+        if start < 0:
+            start = 0
+
+    return chunks
+
+
 def main():
 
     project_root = Path('.').resolve()  # absolute path to current folder
