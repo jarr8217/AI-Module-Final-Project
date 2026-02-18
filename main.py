@@ -111,10 +111,13 @@ def main():
         print('\nPreview of first doc source:', documents[0]['source'])
         print('Preview of first doc text (first 500 chars):')
         print(documents[0]['text'][:500])'''
+
     if chunks:
-        print('\nPreview of first chunk source:', chunks[0]['source'])
-        print('Preview of first chunk text (first 500 chars):')
-        print(chunks[0]['text'][:500])
+        print("\nPreview chunk:")
+        print("Source:", chunks[0]["source"])
+        print("Chunk ID:", chunks[0]["chunk_id"])
+        print("Text (first 200 chars):")
+        print(chunks[0]["text"][:200])
 
 
 if __name__ == '__main__':
