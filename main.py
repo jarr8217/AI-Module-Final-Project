@@ -96,15 +96,6 @@ def chunk_text(text, chunk_size=1000, overlap=200):
     return chunks
 
 
-def tokenize(text):
-    return re.findall(r'\w+', text.lower())
-
-
-def score_overlap(query_tokens, chunk_text):
-    chunk_tokens = set(tokenize(chunk_text))
-    return len(set(query_tokens).intersection(chunk_tokens))
-
-
 def chunk_docs(documents, chunk_size=1000, overlap=200):
     """
     Splits a list of documents into overlapping chunks of text.
@@ -134,6 +125,15 @@ def chunk_docs(documents, chunk_size=1000, overlap=200):
             )
 
     return all_chunks
+
+
+def tokenize(text):
+    return re.findall(r'\w+', text.lower())
+
+
+def score_overlap(query_tokens, chunk_text):
+    chunk_tokens = set(tokenize(chunk_text))
+    return len(set(query_tokens).intersection(chunk_tokens))
 
 
 def main():
