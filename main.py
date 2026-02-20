@@ -136,6 +136,26 @@ def score_overlap(query_tokens, chunk_text):
     return len(set(query_tokens).intersection(chunk_tokens))
 
 
+def retrieve_top_k(query, chunks, k=5):
+    query_tokens = tokenize(query)
+    scored = []
+
+    for chunk in chunks:
+        score = score_overlap(query_tokens, chunk['text'])
+        if score > 0:
+            scored.append(
+                {
+                    'score': score,
+                    'source': chunk['source'],
+                    'chunk_id': chunk['chunk_id'],
+                    'text': chunk['text'],
+                }
+            )
+
+    scored.sort(key=lambda x: x['score'], reverse=True)
+    return scored[:k]
+
+
 def main():
     """
     Loads documents from data directory, chunks them into overlapping pieces of text, and prints a preview of the results.
@@ -156,23 +176,40 @@ def main():
 
     chunks = chunk_docs(documents, chunk_size=1000, overlap=200)
 
-    print('Project root:', project_root)
+    '''print('Project root:', project_root)
     print('Data directory:', data_dir)
     print('Storage directory:', storage_dir)
     print('Docs found:', len(files))
     print('Docs loaded:', len(documents))
 
-    '''if documents:
+    if documents:
         print('\nPreview of first doc source:', documents[0]['source'])
         print('Preview of first doc text (first 500 chars):')
-        print(documents[0]['text'][:500])'''
+        print(documents[0]['text'][:500])
 
     if chunks:
         print("\nPreview chunk:")
         print("Source:", chunks[0]["source"])
         print("Chunk ID:", chunks[0]["chunk_id"])
         print("Text (first 200 chars):")
-        print(chunks[0]["text"][:200])
+        print(chunks[0]["text"][:200])'''
+
+    print('\n-- Retrieval Test --')
+    query = input('Enter a question: ').strip()
+
+    results = retrieve_top_k(query, chunks, k=3)
+
+    print('\n Results:')
+
+    if not results:
+        print('No results found.')
+        return
+
+    for result in results:
+        print('\nScore: ', result['score'])
+        print('Source: ', result['source'])
+        print('Chunk ID: ', result['chunk_id'])
+        print('Text: ', result['text'][:1000])
 
 
 if __name__ == '__main__':
